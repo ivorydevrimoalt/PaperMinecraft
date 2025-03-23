@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Random Data Generator & File Encoder</title>
+<style>
+body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+#output {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: 80%;
+  word-wrap: break-word; /* Prevents overflow */
+}
+#fileInput {
+    margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<button onclick="generateData()">Generate</button>
+<div id="output"></div>
+<input type="file" id="fileInput" accept="*" />
+<button onclick="encodeFile()">Encode File</button>
+
+<script>
+function generateRandomString() {
+  const prefix = "12310024427";
+  const suffix = "101010";
+  const randomLength = Math.floor(Math.random() * 50) + 10; // Random length between 10 and 60
+  let randomNumbers = "";
+  for (let i = 0; i < randomLength; i++) {
+    randomNumbers += Math.floor(Math.random() * 10);
+  }
+  return prefix + randomNumbers + suffix;
+}
+
+function generateData() {
+  const outputDiv = document.getElementById("output");
+  outputDiv.textContent = generateRandomString();
+}
+
+function encodeFile() {
+    const fileInput = document.getElementById("fileInput");
+    const outputDiv = document.getElementById("output");
+
+    if (fileInput.files.length === 0) {
+        outputDiv.textContent = "Please select a file.";
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        const fileContent = event.target.result;
+        const encodedString = btoa(fileContent); // Base64 encoding.
+        outputDiv.textContent = encodedString;
+    };
+
+    reader.onerror = function(event){
+        outputDiv.textContent = "Error reading file";
+    }
+
+    reader.readAsBinaryString(file); // important for base64 encoding.
+
+}
+
+</script>
+</body>
+</html>
